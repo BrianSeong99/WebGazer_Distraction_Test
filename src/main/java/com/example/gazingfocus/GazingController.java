@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 
 @RestController
@@ -19,9 +20,10 @@ public class GazingController {
     @PostMapping(value="/qaupload",produces = "application/json;charset=UTF-8")
     public String Test(@RequestBody String qaInfo){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        byte[] outputBytes = qaInfo.getBytes(StandardCharsets.UTF_8);
         try {
-            String filename = timestamp.toString() + "qa-upload.json";
+            String pattern = "yyyy-MM-dd-HH-mm-ss";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String filename = simpleDateFormat.format(timestamp) + "qa-upload.json";
             BufferedWriter out = new BufferedWriter(new FileWriter(filename));
             out.write(qaInfo);
             out.close();
@@ -39,17 +41,19 @@ public class GazingController {
     @ResponseBody
     public String addProduct(@RequestParam("Data") String recordingDescription,@RequestParam("Recording") MultipartFile recording) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String filename = timestamp.toString() + "-recording-" +recording.getOriginalFilename();
+        String pattern = "yyyy-MM-dd-HH-mm-ss";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         try{
             if(!recording.isEmpty()){
+                String filename = simpleDateFormat.format(timestamp) + "-recording-" +recording.getOriginalFilename();
                 byte [] bytes = recording.getBytes();
                 BufferedOutputStream bufferedOutputStream = new
                         BufferedOutputStream(new FileOutputStream(new File(filename)));
                 bufferedOutputStream.write(bytes);
                 bufferedOutputStream.close();
             }
-            String dataFilename = timestamp.toString() + "data-recprdomg.json";
-            BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+            String descriptionFilename = simpleDateFormat.format(timestamp) + "-recording-description.json";
+            BufferedWriter out = new BufferedWriter(new FileWriter(descriptionFilename));
             out.write(recordingDescription);
             out.close();
         }catch (IOException e){
