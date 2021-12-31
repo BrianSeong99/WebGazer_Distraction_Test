@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>WebGazer.js: Democratizing Webcam Eye Tracking on the Browser</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- <link rel="stylesheet" href="css/highlight/styles/default.css"> -->
+        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+        <script src="css/highlight/highlight.pack.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="./css/style.css">
+    </head>
+
+    <body>        
+        <div class="d-flex flex-column">
+            <!-- Fixed navbar -->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top ">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">BBY Attention Testing Webpage</a>
+                    </div>
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/instructions.html">Instructions</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/calibration.html">Calibration</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/trackingtask.html">Gaze Tracking Task</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="/videotask.html">Video Task</a></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </nav>
+            <div style="height:89vh">
+                <br>
+                <div class="d-flex justify-content-center d-grid gap-3">
+                    <button id='record_toggle_button' class="btn btn-warning" type="submit">Record/Done</button>
+                    <a id="download_record_button"><button class="btn btn-secondary" type="submit" style="display: none;">Download Json</button></a>
+                    <a id="download_record_button2"><button class="btn btn-secondary" type="submit" style="display: none;">Download Video</button></a>
+                    <button id="upload_record_button" class="btn btn-secondary">Upload</button>
+                </div>
+                <br>
+                <div class="d-flex justify-content-center d-grid gap-3">
+                    <button id='strong_footage_1' class="btn btn-success" type="submit" onclick="UpdateTask(1)">Footage 1</button>
+                    <button id='strong_footage_2' class="btn btn-success" type="submit" onclick="UpdateTask(2)">Footage 2</button>
+                    <button id='strong_footage_3' class="btn btn-success" type="submit" onclick="UpdateTask(3)">Footage 3</button>
+                    <button id='strong_footage_4' class="btn btn-success" type="submit" onclick="UpdateTask(4)">Footage 4</button>
+                    <button id='strong_footage_5' class="btn btn-success" type="submit" style="display: none" onclick="UpdateTask(5)">Footage 5</button>
+                    <button id='strong_footage_6' class="btn btn-success" type="submit" style="display: none" onclick="UpdateTask(6)">Footage 6</button>
+                    <button id='strong_footage_7' class="btn btn-success" type="submit" style="display: none" onclick="UpdateTask(7)">Footage 7</button>
+                    <button id='strong_footage_8' class="btn btn-success" type="submit" style="display: none" onclick="UpdateTask(8)">Footage 8</button>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#answerModal">Answer Question</button>
+                    <button id='next_session' class="btn btn-dark" style="display: none" onclick="UpdateSession()">Next Session</button>
+                    <!-- Modal -->
+                    <div id="answerModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                    
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label id="question_label" for="answer_input" class="col-form-label">In the film review clip, the man mentioned about a machine "Fred" that can think and feel like human. Who is the creator
+                                            of this kind of machine?</label>
+                                            <input type="text" class="form-control" id="answer_input" autocomplete="off">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id='start_calibration' class="btn btn-primary" data-dismiss="modal"
+                                        onclick="UpdateAnswer()">Done</button>
+                                </div>
+                            </div>
+                    
+                        </div>
+                    </div>
+
+                    <form method="get" action="videotask.html">
+                        <button id='next_session' class="btn btn-info" style="display: none;" type="submit">Next Session</button>
+                    </form>
+                </div>
+                <br>
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex flex-column d-grid gap-6">
+                        <video id="video_element" controls>
+                            <source id="video_source" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <script src="./webgazer.js"></script>
+            <script>
+                window.onload = async function () {
+                    await webgazer.setRegression('ridge')
+                        .showVideoPreview(false)
+                        .showPredictionPoints(false)
+                        .saveDataAcrossSessions(true)
+                        .begin()
+                    console.log("begin")
+                    webgazer.record(2);
+                }
+
+                let record_status = false
+                let webgazer_isready = false
+                let record_startclock = false;
+                let record_endclock = false;
+
+                const videolink = {
+                    "1": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640226579/bby/%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%901_%E5%BC%BA%E6%83%85%E8%8A%82_%E5%BC%BA%E5%BC%B9%E7%AA%97_%E5%B7%A6%E4%BE%A7_ndyhky.mp4",
+                    "2": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640226563/bby/%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%902_%E5%BC%BA%E6%83%85%E8%8A%82_%E5%BC%BA%E5%BC%B9%E7%AA%97_%E5%8F%B3%E4%BE%A7_zhnnyi.mp4",
+                    "3": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640226565/bby/%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%903_%E5%BC%BA%E6%83%85%E8%8A%82_%E5%BC%B1%E5%BC%B9%E7%AA%97_%E5%B7%A6%E4%BE%A7_zoxa6l.mp4",
+                    "4": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640226583/bby/%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%904_%E5%BC%BA%E6%83%85%E8%8A%82_%E5%BC%B1%E5%BC%B9%E7%AA%97_%E5%8F%B3%E4%BE%A7_rr4dmp.mp4",
+                    "5": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640521877/bby/NEW%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%905_%E5%BC%B1%E6%83%85%E8%8A%82_%E5%BC%BA%E5%BC%B9%E7%AA%97_%E5%B7%A6%E4%BE%A7_q6v685.mp4",
+                    "6": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640226581/bby/%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%906_%E5%BC%B1%E6%83%85%E8%8A%82_%E5%BC%BA%E5%BC%B9%E7%AA%97_%E5%8F%B3%E4%BE%A7_c1u2g7.mp4",
+                    "7": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640521805/bby/NEW%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%907_%E5%BC%B1%E6%83%85%E8%8A%82_%E5%BC%B1%E5%BC%B9%E7%AA%97_%E5%B7%A6%E4%BE%A7_ejvzle.mp4",
+                    "8": "https://res.cloudinary.com/dqpmuvsz7/video/upload/v1640226584/bby/%E5%AE%9E%E9%AA%8C%E7%B4%A0%E6%9D%908_%E5%BC%B1%E6%83%85%E8%8A%82_%E5%BC%B1%E5%BC%B9%E7%AA%97_%E5%8F%B3%E4%BE%A7_u8yk0v.mp4"
+                }
+
+                // const answermodel = new bootstrap.Modal(document.getElementById('answer_model'))
+
+                const UpdateAnswer = () => {
+                    const inputAnswer = document.getElementById('answer_input');
+                    webgazer.mediaRecorder.Answer = inputAnswer.value;
+                    const nextSession = document.getElementById('next_session');
+                    nextSession.style.display = 'block';
+                }
+
+                const UpdateTask = (index) => {
+                    const video_source = document.getElementById('video_source');
+                    const video_url = videolink[index.toString()]
+                    console.log("video link", video_url);
+                    video_source.setAttribute('src', video_url);
+                    video_source.setAttribute('type', 'video/mp4');
+                    const video_element = document.getElementById('video_element')
+                    video_element.load();
+                    
+                    webgazer.mediaRecorder.TaskNumber = 200 + (index < 5 ? 10 : 20) + index
+                    console.log(webgazer.mediaRecorder.TaskNumber);
+                    const question_label = document.getElementById('question_label');
+                    question_label.innerHTML = index < 5 
+                        ? 'In the film review clip, the man mentioned about a machine "Fred" that can think and feel like human. Who is the creator of this kind of machine?'
+                        : 'In the film review clip, a woman with brown hair and green eyes and another woman with green eyes glanced at each other under a tree. What color of hair does the latter have?'
+                }
+
+                const UpdateSession = () => {
+                    const strong_footage_1 = document.getElementById('strong_footage_1');
+                    const strong_footage_2 = document.getElementById('strong_footage_2');
+                    const strong_footage_3 = document.getElementById('strong_footage_3');
+                    const strong_footage_4 = document.getElementById('strong_footage_4');
+                    const strong_footage_5 = document.getElementById('strong_footage_5');
+                    const strong_footage_6 = document.getElementById('strong_footage_6');
+                    const strong_footage_7 = document.getElementById('strong_footage_7');
+                    const strong_footage_8 = document.getElementById('strong_footage_8');
+                    strong_footage_1.style.display = 'none';
+                    strong_footage_2.style.display = 'none';
+                    strong_footage_3.style.display = 'none';
+                    strong_footage_4.style.display = 'none';
+                    strong_footage_5.style.display = 'block';
+                    strong_footage_6.style.display = 'block';
+                    strong_footage_7.style.display = 'block';
+                    strong_footage_8.style.display = 'block';
+                }
+
+                const videoelement = document.getElementById('video_element')
+                videoelement.addEventListener('play', () => {
+                    if (videoelement.readyState === 4) {
+                        console.log("play");
+                        record_startclock = true;
+                    }
+                    else {
+                        console.log("not ready to play");
+                        videoelement.pause();
+                    }
+                });
+                videoelement.addEventListener('end', () => { //change back to end
+                    console.log("end");
+                    record_endclock = true;
+                })
+
+                const recordtoggle = document.getElementById('record_toggle_button')
+                recordtoggle.addEventListener('click', async () => {
+                    if (recordtoggle.classList.contains('btn-warning')) {
+                        recordtoggle.classList.remove('btn-warning')
+                        recordtoggle.classList.add('btn-danger')
+                        await webgazer.setGazeListener((data, clock) => {
+                            webgazer.mediaRecorder.gazingdata.push({ 'data': data, 'clock': clock })
+                            if (record_startclock) {
+                                webgazer.mediaRecorder.StartIndex = webgazer.mediaRecorder.gazingdata.length - 1;
+                                record_startclock = false;
+                            }
+                            if (record_endclock) {
+                                webgazer.mediaRecorder.EndIndex = webgazer.mediaRecorder.gazingdata.length - 1;
+                                record_endclock = false;
+                            }
+                        })
+                        while (webgazer.isReady() == false) { }
+                        console.log("ready")
+                        webgazer_isready = true;
+                        webgazer.record(0);
+                    } else {
+                        recordtoggle.classList.remove('btn-danger')
+                        recordtoggle.classList.add('btn-warning')
+                        webgazer.record(1);
+                    }
+                })
+            </script>
+        </div>  
+
+        <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    </body>
+</html>

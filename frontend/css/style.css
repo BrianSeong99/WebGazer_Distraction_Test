@@ -1,0 +1,272 @@
+body {
+    min-width:600px!important;
+}
+
+button {
+    border-radius: 4px;
+}
+/* Video Feed Styling */
+#overlay {
+/* Video Feed Styling:
+ * Include the !important keyword to override default styles applied by JS.
+ * webgazer.js sets defaults for: display, position, top, left, width, height
+ */
+}
+#webgazerVideoContainer {
+    display: block !important; 
+    position: fixed !important;
+    top: 0px !important;
+    left: 0px !important;
+    width: 320px !important;
+    height: 240px !important;
+    z-index: 1;
+}
+
+/* Navbar styling */
+#webgazerNavbar {
+    left: 320px;
+    z-index: 0;
+    box-shadow: 0px 3px 5px #ddd;
+    border:0px;
+    background-color: #fff;
+}
+
+#Accuracy a{
+    background-color: #222;
+    color: #eee;
+    left: -15px;
+    padding-left: 80px;
+    padding-right: 40px;
+}
+#Accuracy {
+    background-color: #222;
+    padding-left: inherit;
+}
+
+li {
+    padding-left: 50px;
+}
+.navbar-right li {
+    padding-right: 20px;
+}
+
+.helpBtn {
+    padding: 15px;
+    border: none;
+    background: none;
+    color: #777;
+}
+.helpBtn a {
+    background: none;
+    color: #777;
+}
+.helpBtn a:hover {
+    color: black!important;
+    text-decoration: none;
+}
+.modal-header {
+    border-bottom: none!important;
+}
+
+/* Calibration button styling */
+.Calibration{
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background-color: red;
+    opacity: 0.2;
+    border-color: white;
+    border-style: solid;
+    position:fixed;
+}
+
+/* Calibration point position */
+#Pt1{
+    top: 70px;
+    left:340px;
+}
+#Pt2{
+    top: 70px;
+    left:50vw;
+    margin-left: 340;
+}
+#Pt3{
+    top: 70px;
+    right:2vw;
+}
+#Pt4{
+    top:50vh;
+    left:2vw;
+}
+#Pt5{
+    top: 50vh;
+    left: 50vw;
+}
+#Pt6{
+    top: 50vh;
+    right:2vw;
+}
+#Pt7{
+    bottom:2vw;
+    left: 2vw;
+}
+#Pt8{
+    bottom:2vw;
+    left:50vw;
+}
+#Pt9{
+    bottom:2vw;
+    right:2vw;
+}
+
+#moving_dot1 {
+  display: block;
+  background: black;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  animation: wave 15s linear; /* infinite alternate */
+  animation-play-state: paused;
+  /* star shape */
+  offset-path: path('M 834 55 C 703.3333 410.6667 574.6667 649.3333 447 692 C 722.6667 755.3333 999.3333 622.6667 1276 205 C 903.3333 478 530.6667 466 416 215 C 535.3333 628 912.6667 802 1176 738 C 1137.3333 708 984.6667 440 834 53');
+}
+
+#moving_dot2 {
+  display: none;
+  background: red;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  animation: wave 15s linear; /* infinite alternate */
+  animation-play-state: paused;
+  /* rect shape */
+  offset-path: path('M 834 55 L 458 56 L 467 624 L 1269 618 L 1239 52 L 837 56');
+}
+
+#moving_dot3 {
+  display: none;
+  background: blue;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  animation: wave 15s linear; /* infinite alternate */
+  animation-play-state: paused;
+  /* weird   shape */
+  offset-path: path('M 834 55 C 731 98 -160 -28 770 336 C 669 432.6667 -137 315 467 626 C 734.3333 623.3333 853 122 1269 618 C 1339 714 1489 263 1239 52 C 1165 10 1186 377 1054 152 C 994 5 915 -1 837 56');
+}
+
+@keyframes wave {
+  100% { 
+    offset-distance: 100%;
+  }
+}
+
+@keyframes wave1 {
+    0% {
+    transform: translate(10vw,10vh);
+  }
+    10% {
+    transform: translate(50vw,10vh);
+  }
+    20% {
+    transform: translate(90vw,10vh);
+  }
+    30% {
+    transform: translate(90vw,35vh);
+  }
+    40% {
+    transform: translate(90vw,70vh);
+  }
+    50% {
+    transform: translate(50vw,70vh);
+  }
+    60% {
+    transform: translate(10vw,70vh);
+  }
+    70% {
+    transform: translate(10vw,35vh);
+  }
+    80% {
+    transform: translate(50vw,35vh);
+  }
+    90% {
+    transform: translate(10vw,10vh);
+  }
+    100% {
+    transform: translate(90vw,10vh);
+  }
+}
+
+@keyframes wave2 {
+    0% {
+    transform: translate(10vw,10vh);
+  }
+    10% {
+    transform: translate(50vw,35vh);
+  }
+    20% {
+    transform: translate(90vw,10vh);
+  }
+    30% {
+    transform: translate(50vw,10vh);
+  }
+    40% {
+    transform: translate(10vw,35vh);
+  }
+    50% {
+    transform: translate(50vw,70vh);
+  }
+    60% {
+    transform: translate(90vw,35vh);
+  }
+    70% {
+    transform: translate(90vw,70vh);
+  }
+    80% {
+    transform: translate(10vw,70vh);
+  }
+    90% {
+    transform: translate(10vw,10vh);
+  }
+    100% {
+    transform: translate(90vw,10vh);
+  }
+}
+
+@keyframes wave3 {
+    0% {
+    transform: translate(50vw,35vh);
+  }
+    10% {
+    transform: translate(50vw,10vh);
+  }
+    20% {
+    transform: translate(90vw,10vh);
+  }
+    30% {
+    transform: translate(10vw,35vh);
+  }
+    40% {
+    transform: translate(10vw,10vh);
+  }
+    50% {
+    transform: translate(90vw,35vh);
+  }
+    60% {
+    transform: translate(90vw,70vh);
+  }
+    70% {
+    transform: translate(50vw,70vh);
+  }
+    80% {
+    transform: translate(10vw,70vh);
+  }
+    90% {
+    transform: translate(10vw,10vh);
+  }
+    100% {
+    transform: translate(90vw,10vh);
+  }
+}
